@@ -1,11 +1,13 @@
-//script.js
-$( document ).ready(function() {
+//mainly consulted Jquery.com documentation.
 
-   $('#name').focus();
+// wrap everything in doc ready function so entire page loads before the script is run
+$(document).ready(function() {
 
-   // hide other job role by default
-   $('#other-title').hide();
+   $('#name').focus();  //place curson inside name field on page load.
 
+   $('#other-title').hide();  // hide "other" job role text field by default
+
+   //show the "other" job role field if user selects "other" in drop-down
    $('#title').change(function() {
       const $title = $('#title option:selected').val();
       if ($title === 'other') {
@@ -13,9 +15,10 @@ $( document ).ready(function() {
       };
    });
 
-   //hide color selector by default
+   $('#colors-js-puns').hide(); //hide color selector drop-down by default
 
-   $('#colors-js-puns').hide();
+   // on change to the design dropdown, show/hide certain color selections based on
+   // which design choice is made.
 
    $('#design').change(function(){
 
@@ -30,7 +33,6 @@ $( document ).ready(function() {
             $('#color option[value="dimgrey"]').hide();
             $('#color option[value="tomato"]').hide();
             $('#color option[value="gold"]').show();
-            //$('#colors-js-puns').hide();
             $('#colors-js-puns').show();
             break;
          case 'heart js':
@@ -42,22 +44,21 @@ $( document ).ready(function() {
             $('#color option[value="dimgrey"]').show();
             $('#color option[value="tomato"]').show();
             $('#color option[value="gold"]').hide();
-            //$('#colors-js-puns').hide();
             $('#colors-js-puns').show();
             break;
 
          default:
-            $('#colors-js-puns').hide();
+            $('#colors-js-puns').hide(); //default hide color list.
       } //End switch
    }); //end design
 
-
+   // prevent scheduling conflicts in activities section.
    const $classTotal = $( '.activities input:checkbox' ).on( "click", function(){
-
+      //set var for total cost for conference activities.
       let $totalFees = $('.activities input:checked').length *100;
 
       if ($('.activities input[name="all"]').is(':checked')){
-         $totalFees = $totalFees + 100
+         $totalFees = $totalFees + 100       // add $100 for main conference selection
       }
 
       // Tues 9-12 group -- js-frameworks, express
@@ -85,23 +86,24 @@ $( document ).ready(function() {
       } else {
          $('.activities input[name="js-libs"]').removeAttr("disabled");
       }
-
+      // div to display the total costs for activities.
       const DisplayTotalFee = '<div id="fee"> Total: $' + $totalFees + '</div>';
 
+      // if fee div exists, replace it in the dom, otherwise create it. prevents duplicates.
       if($("#fee").length == 0) {
          $('.activities').append(DisplayTotalFee);
       } else {
          $( "#fee" ).replaceWith(DisplayTotalFee);
       }
 
-   });
+   }); //end $classTotal
 
    //set cc payment as default option, hide others.
    $('#payment option[value="credit card"]').prop("selected", true);
    $( 'fieldset:last-of-type > div:last-of-type ' ).hide();
    $( 'fieldset:last-of-type > div:nth-last-of-type(2) ' ).hide();
 
-   // create spans for all field validations and set to hidden
+   // create spans for all field validation messages and set to hidden
    let $nameSpan = $('<span id="nameV"><p class="required_field_text">Your name is required.</p></span>').insertAfter('#name');
    $nameSpan.hide();
 
@@ -137,6 +139,8 @@ $( document ).ready(function() {
    $('#credit-card > div:last-of-type').append('<span id="cvvValid"><p  class="required_field_text">CVV Invalid</p></span>');
    $('#cvvValid').hide();
 
+   //submit button warning
+
    $('button').after('<div id="lastWarning"><p  class="required_field_text">Please complete required fields above.</p></div>');
    $('#lastWarning').hide();
 
@@ -169,14 +173,14 @@ $( document ).ready(function() {
       let isValid= emailRegEx.test(input.val());
    	let emailExists=$(this).val();
 
-   	if(!emailExists){
+   	if(!emailExists){                     //check that text exists.
          $emailRequiredSpan.show();
          $('#mail').addClass('invalid');
       } else {
          $emailRequiredSpan.hide();
          $('#mail').removeClass('invalid');
       }
-      if (!isValid && emailExists){
+      if (!isValid && emailExists){       //check that it's a properly formatted email address.
          $emailInvalidSpan.show();
          $('#mail').addClass('invalid');
       } else {
@@ -184,6 +188,8 @@ $( document ).ready(function() {
       }
 
    });
+
+      //verify that at least one activity is selected.
    $('.activities').change(function(){
       let v = $('input:checked').length;
        if (v < 1){
@@ -193,8 +199,12 @@ $( document ).ready(function() {
       }
    });
 
-   // credit card number field validations
-   const validNum = /^[0-9]{13,16}$/;
+   // credit card number, zip, cvv field validations
+   //for each field check that a value exists and then check that value is of proper length.
+   //show red borders and display message for violations.
+   //use empty placeholder spans to preserve formatting.
+
+   const validNum = /^[0-9]{13,16}$/; //numeric betweeen 13 and 16 digits
 
       $('#cc-num').focusout(function(){
          let input=$(this);
@@ -216,12 +226,11 @@ $( document ).ready(function() {
          } else {
             $('#ccNumValid').hide();
          }
-
       });
 
       //zip validations
 
-      const validZip = /^[0-9]{5}$/;
+      const validZip = /^[0-9]{5}$/;      //numeric 5 digits
       $('#zip').focusout(function(){
          let input=$(this);
          let zipExists=$(this).val();
@@ -248,7 +257,7 @@ $( document ).ready(function() {
 
       //cvv validations
 
-      const validCVV = /^[0-9]{3}$/;
+      const validCVV = /^[0-9]{3}$/;      //numeric 3 digits
       $('#cvv').focusout(function(){
          let input=$(this);
          let cvvExists=$(this).val();
@@ -270,7 +279,7 @@ $( document ).ready(function() {
             $('#cvvValid').hide();
          }
       }); //end validNum
-
+      //show credit card option by default. hide non-selected payment options.
    const $payment = $( '#payment' ).change(function(){
       const $payOption = $('#payment option:selected').val();
 
@@ -293,6 +302,7 @@ $( document ).ready(function() {
 
    });
 
+   let ccPayment = true;
    //Sumbit onlick handler
    //disable submit until all requirements are met
 
@@ -300,20 +310,24 @@ $( document ).ready(function() {
       let $ccNum = $('#cc-num').val();
       let $zip = $('#zip').val();
       let $cvv = $('#cvv').val();
-      let errorCount = 0;
+      let errorCount = 0;           //keep count of field errors
+
+      //check that all required fields contain data and are valid.
       if (!$('#name').val()) {
+         errorCount = errorCount + 1;
          e.preventDefault();
+      } else {
+         errorCount = errorCount - 1;
       }
       if (!$('#mail').val() || !emailRegEx.test($('#mail').val()) ) {
          $('#mail').addClass('invalid');
          errorCount = errorCount + 1;
          e.preventDefault();
       } else {
-         $('#mail').RemoveClass('invalid');
+         $('#mail').removeClass('invalid');
          errorCount = errorCount - 1;
       }
       if ($('.activities input:checked').length < 1){
-         //print checkbox is missing
          $('#checkboxV').show();
          e.preventDefault();
          errorCount = errorCount + 1;
@@ -322,9 +336,11 @@ $( document ).ready(function() {
          errorCount = errorCount - 1;
       }
 
+      //only assess cc data fields if cc option is selected.
       if ($('#payment option:selected').val() === 'credit card')
 
       {
+         ccPayment = true;
          if (!$ccNum || !validNum.test($ccNum)) {
             $('#cc-num').addClass('invalid');
             e.preventDefault();
@@ -349,11 +365,15 @@ $( document ).ready(function() {
             $('#cvv').removeClass('invalid');
             errorCount = errorCount - 1;
          }
-      }
-      if (errorCount > 0){
+      } else {ccPayment = false;}
+
+         //if there is form info missing, display message
+      if (
+         (errorCount = -6 && ccPayment)
+         ||
+         (errorCount = -3 && !ccPayment)
+      ){
       $('#lastWarning').show();
       }
    });
 }); //end document ready.
-
-//
