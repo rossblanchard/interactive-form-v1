@@ -7,14 +7,16 @@ $(document).ready(function() {
 
    $('#other-title').hide();  // hide "other" job role text field by default
 
-   //show the "other" job role field if user selects "other" in drop-down
+  //show the "other" job role field if user selects "other" in drop-down
    $('#title').change(function() {
       const $title = $('#title option:selected').val();
       if ($title === 'other') {
          $('#other-title').show();
+      } else {
+         $('#other-title').hide();
       };
    });
-
+  
    $('#colors-js-puns').hide(); //hide color selector drop-down by default
 
    // on change to the design dropdown, show/hide certain color selections based on
